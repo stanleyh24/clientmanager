@@ -10,8 +10,8 @@ type Router struct {
 	Name      string    `json:"name"`
 	Username  string    `json:"username"`
 	Password  string    `json:"password"`
-	CreatedAt int64     ` json:"created_at"`
-	UpdatedAt int64     ` json:"updated_at"`
+	CreatedAt int64     `json:"created_at"`
+	UpdatedAt int64     `json:"updated_at"`
 }
 
 type Routers []*Router

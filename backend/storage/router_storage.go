@@ -11,7 +11,7 @@ import (
 )
 
 func (s *Store) GetAllRouter() (models.Routers, error) {
-	sql := "SELECT id,name,ip,username,password,created_at FROM routers;"
+	sql := "SELECT id,name,ip,username,password,created_at, updated_at FROM routers;"
 	rows, err := s.db.Query(context.Background(), sql)
 
 	if err != nil {
@@ -24,7 +24,7 @@ func (s *Store) GetAllRouter() (models.Routers, error) {
 
 	for rows.Next() {
 		var router models.Router
-		err = rows.Scan(&router.ID, &router.Name, &router.Ip, &router.Username, &router.Password, &router.CreatedAt)
+		err = rows.Scan(&router.ID, &router.Name, &router.Ip, &router.Username, &router.Password, &router.CreatedAt, &router.UpdatedAt)
 		if err != nil {
 			return nil, fmt.Errorf("%s %w", "Router Row Scan(): ", err)
 		}
@@ -36,7 +36,7 @@ func (s *Store) GetAllRouter() (models.Routers, error) {
 }
 
 func (s *Store) GetRouterByID(id string) (*models.Router, error) {
-	sql := "SELECT * FROM routers where id = $1;"
+	sql := "SELECT id,name,ip,username,password,created_at,updated_at FROM routers where id = $1;"
 	var router models.Router
 	err := s.db.QueryRow(context.Background(), sql, id).Scan(&router.ID, &router.Name, &router.Ip, &router.Username, &router.Password, &router.CreatedAt, &router.UpdatedAt)
 	if err != nil {
