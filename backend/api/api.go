@@ -9,14 +9,12 @@ import (
 )
 
 type APIServer struct {
-	listenAddr string
-	store      storage.Store
+	store storage.PostgresStore
 }
 
-func NewAPIServer(listenAddr string, store storage.Store) *APIServer {
+func NewAPIServer(store storage.PostgresStore) *APIServer {
 	return &APIServer{
-		listenAddr: listenAddr,
-		store:      store,
+		store: store,
 	}
 }
 
@@ -27,10 +25,11 @@ func (a *APIServer) Run() {
 
 	router := v1.Group("/routers")
 	router.Get("/", a.getAllRouter)
-	router.Get("/:id", a.getRouterByID)
 	router.Post("/", a.createRouter)
-	router.Put("/:id", a.updateRouter)
-	router.Delete("/:id", a.deleteRouter)
+	/*	router.Get("/:id", a.getRouterByID)
+
+		router.Put("/:id", a.updateRouter)
+		router.Delete("/:id", a.deleteRouter) */
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Hello, World!")

@@ -2,6 +2,7 @@ package storage
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"log"
 	"time"
@@ -10,10 +11,13 @@ import (
 	"github.com/stanleyh24/clientmanager/models"
 )
 
-func (s *Store) GetAllRouter() (models.Routers, error) {
-	sql := "SELECT id,name,ip,username,password,created_at, updated_at FROM routers;"
-	rows, err := s.db.Query(context.Background(), sql)
+type scanner interface {
+	Scan(dest ...interface{}) error
+}
 
+func (s *PostgresStore) GetAllRouter() (models.Routers, error) {
+	query := "SELECT id,name,ip,username,password,created_at, updated_at FROM routers;"
+	rows, err := s.db.QueryContext(context.Background(), query)
 	if err != nil {
 		log.Println(err)
 		return nil, err
@@ -23,30 +27,18 @@ func (s *Store) GetAllRouter() (models.Routers, error) {
 	var routers models.Routers
 
 	for rows.Next() {
-		var router models.Router
-		err = rows.Scan(&router.ID, &router.Name, &router.Ip, &router.Username, &router.Password, &router.CreatedAt, &router.UpdatedAt)
+
+		r, err := scanRowRouter(rows)
+
 		if err != nil {
 			return nil, fmt.Errorf("%s %w", "Router Row Scan(): ", err)
 		}
-
-		routers = append(routers, &router)
+		routers = append(routers, r)
 	}
 	return routers, nil
-
 }
 
-func (s *Store) GetRouterByID(id string) (*models.Router, error) {
-	sql := "SELECT id,name,ip,username,password,created_at,updated_at FROM routers where id = $1;"
-	var router models.Router
-	err := s.db.QueryRow(context.Background(), sql, id).Scan(&router.ID, &router.Name, &router.Ip, &router.Username, &router.Password, &router.CreatedAt, &router.UpdatedAt)
-	if err != nil {
-		log.Println(err)
-		return nil, err
-	}
-	return &router, nil
-}
-
-func (s *Store) CreateRouter(r models.Router) (*models.Router, error) {
+func (s *PostgresStore) CreateRouter(r models.Router) (*models.Router, error) {
 	sql := "insert into routers (id, name, ip, username, password, created_at) values ($1,$2,$3,$4,$5,$6);"
 
 	ID, err := uuid.NewUUID()
@@ -57,18 +49,18 @@ func (s *Store) CreateRouter(r models.Router) (*models.Router, error) {
 	r.ID = ID
 	r.CreatedAt = time.Now().Unix()
 
-	_, err = s.db.Query(context.Background(), sql, r.ID, r.Name, r.Ip, r.Username, r.Password, r.CreatedAt)
+	_, err = s.db.QueryContext(context.Background(), sql, r.ID, r.Name, r.Ip, r.Username, r.Password, r.CreatedAt)
 	if err != nil {
 		return nil, err
 	}
 	return &r, nil
 }
 
-func (s *Store) UpdateRouter(r models.Router) (*models.Router, error) {
+func (s *PostgresStore) UpdateRouter(r models.Router) (*models.Router, error) {
 	sql := "update routers set name=$2, ip=$3 ,username=$4, password=$5, updated_at=$6 where id = $1;"
 	r.UpdatedAt = time.Now().Unix()
 
-	_, err := s.db.Query(context.Background(), sql, r.ID, r.Name, r.Ip, r.Username, r.Password, r.UpdatedAt)
+	_, err := s.db.QueryContext(context.Background(), sql, r.ID, r.Name, r.Ip, r.Username, r.Password, r.UpdatedAt)
 
 	if err != nil {
 		return nil, fmt.Errorf("%s %w", "UpdateCategory()", err)
@@ -77,17 +69,33 @@ func (s *Store) UpdateRouter(r models.Router) (*models.Router, error) {
 	return &r, nil
 }
 
-func (s *Store) DeleteRouter(id string) error {
+func (s *PostgresStore) DeleteRouter(id string) error {
 	sql := "delete from routers where id = $1"
-	ok, err := s.db.Exec(context.Background(), sql, id)
+	row, err := s.db.Exec(sql, id)
 
 	if err != nil {
 		return fmt.Errorf("%s %w", "DeleteCategory()", err)
 	}
-
-	if ok.RowsAffected() < 1 {
+	ok, _ := row.RowsAffected()
+	if ok < 1 {
 		return fmt.Errorf("not found router whit id: %s", id)
 	}
 
 	return nil
+}
+
+func scanRowRouter(s scanner) (*models.Router, error) {
+	router := &models.Router{}
+
+	updatedAtNull := sql.NullInt64{}
+
+	err := s.Scan(&router.ID, &router.Name, &router.Ip, &router.Username, &router.Password, &router.CreatedAt, &updatedAtNull)
+	if err != nil {
+		return &models.Router{}, err
+	}
+
+	router.UpdatedAt = updatedAtNull.Int64
+
+	return router, nil
+
 }
