@@ -26,10 +26,8 @@ func (a *APIServer) Run() {
 	router := v1.Group("/routers")
 	router.Get("/", a.getAllRouter)
 	router.Post("/", a.createRouter)
-	/*	router.Get("/:id", a.getRouterByID)
-
-		router.Put("/:id", a.updateRouter)
-		router.Delete("/:id", a.deleteRouter) */
+	router.Put("/:id", a.updateRouter)
+	router.Delete("/:id", a.deleteRouter)
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Hello, World!")

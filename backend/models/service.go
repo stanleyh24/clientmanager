@@ -1,8 +1,6 @@
 package models
 
 import (
-	"time"
-
 	"github.com/google/uuid"
 )
 
@@ -11,8 +9,8 @@ type Service struct {
 	Name      string    `json:"name"`
 	Price     int       `json:"price"`
 	Rate      string    `json:"rate"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	CreatedAt int64     `json:"created_at"`
+	UpdatedAt int64     `json:"updated_at"`
 }
 
 type Services []*Service

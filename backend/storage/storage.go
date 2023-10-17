@@ -28,3 +28,7 @@ func NewPostgresStore() (*PostgresStore, error) {
 
 	return &PostgresStore{db: db}, nil
 }
+
+type scanner interface {
+	Scan(dest ...interface{}) error
+}

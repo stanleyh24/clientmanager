@@ -11,10 +11,6 @@ import (
 	"github.com/stanleyh24/clientmanager/models"
 )
 
-type scanner interface {
-	Scan(dest ...interface{}) error
-}
-
 func (s *PostgresStore) GetAllRouter() (models.Routers, error) {
 	query := "SELECT id,name,ip,username,password,created_at, updated_at FROM routers;"
 	rows, err := s.db.QueryContext(context.Background(), query)
