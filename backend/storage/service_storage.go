@@ -13,8 +13,8 @@ import (
 )
 
 func (s *PostgresStore) GetAllServices() (models.Services, error) {
-	query := "SELECT id,name,price,rate,created_at, updated_at FROM services;"
-	rows, err := s.db.QueryContext(context.Background(), query)
+	sql := "SELECT id,name,price,rate,created_at, updated_at FROM services;"
+	rows, err := s.db.QueryContext(context.Background(), sql)
 	if err != nil {
 		log.Println(err)
 		return nil, err
@@ -28,7 +28,7 @@ func (s *PostgresStore) GetAllServices() (models.Services, error) {
 		s, err := scanRowService(rows)
 
 		if err != nil {
-			return nil, fmt.Errorf("%s %w", "Router Row Scan(): ", err)
+			return nil, fmt.Errorf("%s %w", "Service Row Scan(): ", err)
 		}
 		services = append(services, s)
 	}
@@ -51,11 +51,28 @@ func (s *PostgresStore) CreateService(service models.Service) (*models.Service, 
 	return &service, nil
 }
 
-func (s *PostgresStore) UpdateService(id string) (*models.Service, error) {
-	return nil, nil
+func (s *PostgresStore) UpdateService(service models.Service) (*models.Service, error) {
+	sql := "UPDATE services SET name=$2, price=$3, rate=$4, updated_at=$5 WHERE id=$1"
+	service.UpdatedAt = time.Now().Unix()
+	_, err := s.db.QueryContext(context.Background(), sql, service.ID, service.Name, service.Price, service.Rate, service.UpdatedAt)
+	if err != nil {
+		return nil, fmt.Errorf("%s %w", "UpdateService()", err)
+	}
+	return &service, nil
 }
 
 func (s *PostgresStore) DeleteService(id string) error {
+	sql := "DELETE FROM services WHERE id = $1"
+	row, err := s.db.Exec(sql, id)
+
+	if err != nil {
+		return fmt.Errorf("%s %w", "DeleteService()", err)
+	}
+	ok, _ := row.RowsAffected()
+	if ok < 1 {
+		return fmt.Errorf("not found router whit id: %s", id)
+	}
+
 	return nil
 }
 

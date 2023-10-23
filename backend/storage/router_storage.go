@@ -59,7 +59,7 @@ func (s *PostgresStore) UpdateRouter(r models.Router) (*models.Router, error) {
 	_, err := s.db.QueryContext(context.Background(), sql, r.ID, r.Name, r.Ip, r.Username, r.Password, r.UpdatedAt)
 
 	if err != nil {
-		return nil, fmt.Errorf("%s %w", "UpdateCategory()", err)
+		return nil, fmt.Errorf("%s %w", "UpdateRouter()", err)
 	}
 
 	return &r, nil
@@ -70,7 +70,7 @@ func (s *PostgresStore) DeleteRouter(id string) error {
 	row, err := s.db.Exec(sql, id)
 
 	if err != nil {
-		return fmt.Errorf("%s %w", "DeleteCategory()", err)
+		return fmt.Errorf("%s %w", "DeleteRouter()", err)
 	}
 	ok, _ := row.RowsAffected()
 	if ok < 1 {
