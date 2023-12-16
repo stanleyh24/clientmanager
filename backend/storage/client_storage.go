@@ -34,7 +34,7 @@ func (s *PostgresStore) GetAllClients() (models.Clients, error) {
 }
 
 func (s *PostgresStore) CreateClient(client models.Client) (*models.Client, error) {
-	sql := "INSERT INTO clients (id, first_name,last_name, address,phone,userdata,payment_date,service_id,created_at) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)"
+	sql := "INSERT INTO clients (id, first_name,last_name, address,phone,userdata,payment_date,service_id,created_at) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)"
 
 	ID, err := uuid.NewUUID()
 	if err != nil {
@@ -42,7 +42,7 @@ func (s *PostgresStore) CreateClient(client models.Client) (*models.Client, erro
 	}
 
 	client.ID = ID
-	client.CreatedAt = time.Now().Unix()
+	client.CreatedAt = time.Now()
 	_, err = s.db.QueryContext(
 		context.Background(),
 		sql,
@@ -64,7 +64,7 @@ func (s *PostgresStore) CreateClient(client models.Client) (*models.Client, erro
 
 func (s *PostgresStore) UpdateClient(client models.Client) (*models.Client, error) {
 	sql := "UPDATE clients SET first_name=$2,last_name=$3, address=$4,phone=$5,userdata=$6,payment_date=$7,service_id=$8,updated_at=$9 WHERE id=$1"
-	client.UpdatedAt = time.Now().Unix()
+	client.UpdatedAt = time.Now()
 
 	_, err := s.db.QueryContext(
 		context.Background(),
@@ -103,14 +103,14 @@ func (s *PostgresStore) DeleteClient(id string) error {
 func scanRowClient(s scanner) (*models.Client, error) {
 	client := &models.Client{}
 
-	updatedAtNull := sql.NullInt64{}
+	updatedAtNull := sql.NullTime{}
 
 	err := s.Scan(&client.ID, &client.First_Name, &client.Last_name, &client.Address, &client.Phone, &client.User_Data, &client.Payment_date, &client.Service_id, &client.CreatedAt, &updatedAtNull)
 	if err != nil {
 		return &models.Client{}, err
 	}
 
-	client.UpdatedAt = updatedAtNull.Int64
+	client.UpdatedAt = updatedAtNull.Time
 
 	return client, nil
 

@@ -2,18 +2,15 @@ package storage
 
 import (
 	"context"
-	"database/sql"
 	"fmt"
 	"log"
-
-	"time"
 
 	"github.com/google/uuid"
 	"github.com/stanleyh24/clientmanager/models"
 )
 
 func (s *PostgresStore) GetAllServices() (models.Services, error) {
-	sql := "SELECT id,name,price,rate,created_at, updated_at FROM services;"
+	sql := "SELECT id,name,price,rate,router_identifier FROM services;"
 	rows, err := s.db.QueryContext(context.Background(), sql)
 	if err != nil {
 		log.Println(err)
@@ -36,15 +33,16 @@ func (s *PostgresStore) GetAllServices() (models.Services, error) {
 }
 
 func (s *PostgresStore) CreateService(service models.Service) (*models.Service, error) {
-	sql := "insert into services (id,name,price,rate,created_at) values ($1,$2,$3,$4,$5)"
+	sql := "insert into services (id,name,price,rate,router_identifier) values ($1,$2,$3,$4,$5)"
 
 	ID, err := uuid.NewUUID()
 	if err != nil {
 		return nil, fmt.Errorf("%s %w", "uuid.NewUUID()", err)
 	}
+
 	service.ID = ID
-	service.CreatedAt = time.Now().Unix()
-	_, err = s.db.QueryContext(context.Background(), sql, service.ID, service.Name, service.Price, service.Rate, service.CreatedAt)
+
+	_, err = s.db.QueryContext(context.Background(), sql, service.ID, service.Name, service.Price, service.Rate, service.RouterIdentifier)
 	if err != nil {
 		return nil, err
 	}
@@ -52,9 +50,8 @@ func (s *PostgresStore) CreateService(service models.Service) (*models.Service, 
 }
 
 func (s *PostgresStore) UpdateService(service models.Service) (*models.Service, error) {
-	sql := "UPDATE services SET name=$2, price=$3, rate=$4, updated_at=$5 WHERE id=$1"
-	service.UpdatedAt = time.Now().Unix()
-	_, err := s.db.QueryContext(context.Background(), sql, service.ID, service.Name, service.Price, service.Rate, service.UpdatedAt)
+	sql := "UPDATE services SET name=$2, price=$3, rate=$4 WHERE id=$1"
+	_, err := s.db.QueryContext(context.Background(), sql, service.ID, service.Name, service.Price, service.Rate)
 	if err != nil {
 		return nil, fmt.Errorf("%s %w", "UpdateService()", err)
 	}
@@ -79,15 +76,10 @@ func (s *PostgresStore) DeleteService(id string) error {
 func scanRowService(s scanner) (*models.Service, error) {
 	service := &models.Service{}
 
-	updatedAtNull := sql.NullInt64{}
-
-	err := s.Scan(&service.ID, &service.Name, &service.Price, &service.Rate, &service.CreatedAt, &updatedAtNull)
+	err := s.Scan(&service.ID, &service.Name, &service.Price, &service.Rate, &service.RouterIdentifier)
 	if err != nil {
 		return &models.Service{}, err
 	}
 
-	service.UpdatedAt = updatedAtNull.Int64
-
 	return service, nil
-
 }

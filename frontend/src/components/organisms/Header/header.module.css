@@ -1,0 +1,8 @@
+ .header{
+    background-color: var(--color-primary);
+    color: var(--color-text);
+ }
+
+ .header__title{
+   margin-left: 1rem;
+ }

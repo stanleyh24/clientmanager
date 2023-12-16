@@ -1,0 +1,17 @@
+.menu{
+    width: 100%;
+    padding: 0.5rem 1rem;
+    color: var(--color-text);
+}
+
+.menu__option{
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+    font-weight: 800;
+    transition: all 200ms ease-in-out;
+}
+
+.menu__option:hover{
+    font-size: 1.5rem;
+    color: var(--color-primary-light);
+}

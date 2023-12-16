@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/stanleyh24/clientmanager/storage"
 )
 
@@ -20,14 +21,9 @@ func NewAPIServer(store storage.PostgresStore) *APIServer {
 
 func (a *APIServer) Run() {
 	app := fiber.New()
+	app.Use(cors.New())
 
 	v1 := app.Group("api/public/v1")
-
-	router := v1.Group("/routers")
-	router.Get("/", a.getAllRouter)
-	router.Post("/", a.createRouter)
-	router.Put("/", a.updateRouter)
-	router.Delete("/:id", a.deleteRouter)
 
 	service := v1.Group("/services")
 	service.Get("/", a.getAllServices)

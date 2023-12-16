@@ -2,6 +2,7 @@ package models
 
 import (
 	"encoding/json"
+	"time"
 
 	"github.com/google/uuid"
 )
@@ -15,8 +16,8 @@ type Client struct {
 	User_Data    json.RawMessage `json:"user_data"`
 	Payment_date int             `json:"payment_date"`
 	Service_id   uuid.UUID       `json:"service_id"`
-	CreatedAt    int64           ` json:"created_at"`
-	UpdatedAt    int64           ` json:"updated_at"`
+	CreatedAt    time.Time       `json:"created_at"`
+	UpdatedAt    time.Time       `json:"updated_at"`
 }
 
 type Clients []*Client

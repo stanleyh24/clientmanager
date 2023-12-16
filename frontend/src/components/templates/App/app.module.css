@@ -1,0 +1,25 @@
+.layout{
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.content {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-areas: "aside main";
+    grid-template-columns: 13% 87%;
+}
+
+.content__sidebar {
+    grid-area: "aside";
+
+    background: var(--color-primary);
+}
+
+.content__main {
+    grid-area: "main";
+    padding-left: 1rem;
+    padding-top: 1rem;;
+}
