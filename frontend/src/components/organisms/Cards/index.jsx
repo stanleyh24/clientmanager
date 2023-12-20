@@ -7,7 +7,7 @@ function Cards() {
   return (
     <section className={styles.cards__container}>
 
-        <div className={styles.cards__card}>
+        <div className={`${styles.cards__card} ${styles.color__primary}`}>
           <div className={styles.card__header}>
             <FaUser className={styles.header__icon}/>
             <p className={styles.header__text}>Usuarios</p>
@@ -19,7 +19,7 @@ function Cards() {
           </div>
         </div>
 
-        <div className={styles.cards__card}>
+        <div className={`${styles.cards__card} ${styles.color__primary}`}>
           <div className={styles.card__header}>
             <BsCashStack className={styles.header__icon}/>
             <p className={styles.header__text}>Recaudado</p>
@@ -31,7 +31,7 @@ function Cards() {
           </div>
         </div>
 
-        <div className={styles.cards__card}>
+        <div className={`${styles.cards__card} ${styles.color__red}`}>
           <div className={styles.card__header}>
             <FaUserTimes className={styles.header__icon}/>
             <p className={styles.header__text}>Suspendidos</p>
@@ -43,8 +43,8 @@ function Cards() {
           </div>
         </div>
 
-        <div className={styles.cards__card}>
-          <div className={styles.card__header}>
+        <div className={`${styles.cards__card} ${styles.color__red}`}>
+          <div className={styles.card__header }>
             <BsCashStack className={styles.header__icon}/>
             <p className={styles.header__text}>Faltante</p>
           </div>
@@ -55,7 +55,7 @@ function Cards() {
           </div>
         </div>
 
-      </section>
+    </section>
   )
 }
 

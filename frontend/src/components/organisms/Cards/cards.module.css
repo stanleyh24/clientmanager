@@ -1,3 +1,11 @@
+.color__red{
+    color: var(--color-danger);
+}
+
+.color__primary{
+    color: var(--color-primary);
+}
+
 .cards__container{
     display: flex;
     flex-direction: row;
@@ -20,7 +28,7 @@
 
 .header__icon{
     margin-right: 0.3rem;
-    color: var(--color-primary);
+    
 }
 
 .header__text{
@@ -34,7 +42,7 @@
 }
 
 .content__text {
-    color: var(--color-primary);
+    
     font-size: 3rem;
     font-weight: 600;
 }
