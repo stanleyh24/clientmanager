@@ -5,6 +5,10 @@
 
 }
 
+.table__container{
+    width: 75%;
+}
+
 table{
     border-collapse: collapse;
     width: 100%;

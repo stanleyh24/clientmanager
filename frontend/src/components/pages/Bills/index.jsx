@@ -1,23 +1,23 @@
-import styles from './clients.module.css';
-import { FaPlus } from "react-icons/fa";
+import styles from './bills.module.css';
 
-function Clients() {
+function Bills() {
   return (
-    <div>
-      <h1 className={styles.title}>Clientes</h1>
-      <section className={styles.container}>
-        <input type="text" placeholder="Search" className={styles.container__input}/>
-        <button type="button" className={styles.container__botton}><span><FaPlus /></span>Nuevo</button>
+    <div className={styles.container__bills}>
+      <h1 className={styles.bills__title}>Facturas</h1>
+
+      <section className={styles.bills__search}>
+        <input type="text" placeholder="Search" className={styles.search__input}/>
       </section>
+
       <section>
       <table>
           <thead>
             <tr>
               <th>Nombre</th>
               <th>Direccion</th>
-              <th>Telefono</th>
+              <th>Monto</th>
               <th>Plan</th>
-              <th>Fecha Pago</th>
+              <th>Fecha Corte</th>
               <th>Acciones</th>
             </tr>
           </thead>
@@ -25,49 +25,41 @@ function Clients() {
             <tr>
               <td>Stanley Hidalgo</td>
               <td>Villa Hermosa</td>
-              <td>809-855-7908</td>
+              <td><span>$</span>800</td>
               <td>5M</td>
-              <td>30</td>
+              <td>21-09-2023</td>
               <td></td>
             </tr>
             <tr>
               <td>Stanley Hidalgo</td>
               <td>Villa Hermosa</td>
-              <td>809-855-7908</td>
+              <td><span>$</span>800</td>
               <td>5M</td>
-              <td>30</td>
+              <td>21-09-2023</td>
               <td></td>
             </tr>
             <tr>
               <td>Stanley Hidalgo</td>
               <td>Villa Hermosa</td>
-              <td>809-855-7908</td>
+              <td><span>$</span>800</td>
               <td>5M</td>
-              <td>30</td>
+              <td>21-09-2023</td>
               <td></td>
             </tr>
             <tr>
               <td>Stanley Hidalgo</td>
               <td>Villa Hermosa</td>
-              <td>809-855-7908</td>
+              <td><span>$</span>800</td>
               <td>5M</td>
-              <td>30</td>
+              <td>21-09-2023</td>
               <td></td>
             </tr>
             <tr>
               <td>Stanley Hidalgo</td>
               <td>Villa Hermosa</td>
-              <td>809-855-7908</td>
+              <td><span>$</span>800</td>
               <td>5M</td>
-              <td>30</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td>Stanley Hidalgo</td>
-              <td>Villa Hermosa</td>
-              <td>809-855-7908</td>
-              <td>5M</td>
-              <td>30</td>
+              <td>21-09-2023</td>
               <td></td>
             </tr>
           </tbody>
@@ -77,4 +69,4 @@ function Clients() {
   )
 }
 
-export default Clients
+export default Bills
